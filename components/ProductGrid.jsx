@@ -2,6 +2,7 @@
 
 import React, { useState } from 'react';
 import ProductCard from './ProductCard';
+import MobileFilterSortBar from './MobileFilterSortBar';
 import { PackageSearch, ArrowUpDown } from 'lucide-react';
 
 export default function ProductGrid({
@@ -9,6 +10,8 @@ export default function ProductGrid({
   loading,
   searchTerm,
   selectedCategory,
+  setSelectedCategory,
+  categories,
   onQuickView,
   wishlist,
   onToggleWishlist,
@@ -38,17 +41,17 @@ export default function ProductGrid({
 
   if (loading) {
     return (
-      <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6 py-6">
+      <div className="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-3 sm:gap-6 py-6">
         {[1, 2, 3, 4, 5, 6, 7, 8].map((n) => (
           <div
             key={n}
-            className="bg-white border border-slate-200 rounded-2xl p-4 h-96 animate-pulse flex flex-col justify-between shadow-xs"
+            className="bg-white border border-slate-200 rounded-2xl p-3 h-80 animate-pulse flex flex-col justify-between shadow-xs"
           >
-            <div className="bg-slate-200 rounded-xl h-48 w-full"></div>
-            <div className="space-y-3 mt-4">
-              <div className="bg-slate-200 h-4 rounded w-3/4"></div>
-              <div className="bg-slate-200 h-3 rounded w-1/2"></div>
-              <div className="bg-slate-200 h-8 rounded w-full mt-4"></div>
+            <div className="bg-slate-200 rounded-xl h-40 w-full" />
+            <div className="space-y-2 mt-3">
+              <div className="bg-slate-200 h-4 rounded w-3/4" />
+              <div className="bg-slate-200 h-3 rounded w-1/2" />
+              <div className="bg-slate-200 h-8 rounded w-full mt-2" />
             </div>
           </div>
         ))}
@@ -57,10 +60,20 @@ export default function ProductGrid({
   }
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-4 sm:space-y-6">
       
-      {/* Grid Controls Bar */}
-      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-4 border-b border-slate-200">
+      {/* Mobile Sticky Filter & Sort Bar */}
+      <MobileFilterSortBar
+        sortBy={sortBy}
+        setSortBy={setSortBy}
+        selectedCategory={selectedCategory}
+        setSelectedCategory={setSelectedCategory}
+        categories={categories}
+        totalItems={sortedProducts.length}
+      />
+
+      {/* Desktop Grid Controls Header */}
+      <div className="hidden md:flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-4 border-b border-slate-200">
         <div>
           <h2 className="text-xl font-black text-slate-900 flex items-center gap-2">
             <span>Explore Products</span>
@@ -77,7 +90,7 @@ export default function ProductGrid({
           <select
             value={sortBy}
             onChange={(e) => setSortBy(e.target.value)}
-            className="bg-white border border-slate-300 text-slate-800 text-xs font-bold px-3 py-1.5 rounded-lg focus:outline-none focus:border-blue-600 cursor-pointer shadow-xs"
+            className="bg-white border border-slate-300 text-slate-800 text-xs font-bold px-3 py-1.5 rounded-xl focus:outline-none focus:border-blue-600 cursor-pointer shadow-xs"
           >
             <option value="newest">Newest Arrivals</option>
             <option value="price-low">Price: Low to High</option>
@@ -86,9 +99,9 @@ export default function ProductGrid({
         </div>
       </div>
 
-      {/* Product Cards Grid */}
+      {/* Product Cards 2-Column Mobile Grid */}
       {sortedProducts.length > 0 ? (
-        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
+        <div className="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-2.5 sm:gap-4 md:gap-6">
           {sortedProducts.map((prod) => (
             <ProductCard
               key={prod.id}
@@ -101,7 +114,7 @@ export default function ProductGrid({
         </div>
       ) : (
         /* Empty State */
-        <div className="text-center py-16 bg-white rounded-2xl border border-slate-200 shadow-sm my-6">
+        <div className="text-center py-16 bg-white rounded-2xl border border-slate-200 shadow-xs my-6">
           <div className="w-16 h-16 mx-auto mb-4 rounded-full bg-blue-50 border border-blue-100 flex items-center justify-center text-blue-600">
             <PackageSearch className="w-8 h-8" />
           </div>
